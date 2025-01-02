@@ -1,5 +1,8 @@
 ﻿namespace MY.LeetCode.Problems.Medium;
 
+/// <summary>
+/// 2559. Count Vowel Strings in Ranges (https://leetcode.com/problems/count-vowel-strings-in-ranges/description)
+/// </summary>
 public class CountVowelStringsInRanges2559
 {
     public record struct IndexRangeData(int Start, int End);
