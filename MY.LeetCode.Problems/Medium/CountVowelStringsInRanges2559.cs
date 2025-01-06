@@ -67,4 +67,61 @@ public class CountVowelStringsInRanges2559
 
         return result;
     }
+
+    public int[] VowelStringsV2(string[] words, int[][] queries)
+    {
+        var rightWordRanges = new HashSet<IndexRangeData>();
+        int? rangeStart = null;
+        for (var i = 0; i < words.Length; i++)
+        {
+            var word = words[i];
+            var isRightWord = VowelLetters.Contains(word[0]) &&
+                VowelLetters.Contains(word[word.Length - 1]);
+
+            if (!isRightWord || i == words.Length - 1)
+            {
+                if (rangeStart != null)
+                {
+                    var rangeEnd = i == words.Length - 1 ? i : i - 1;
+                    rightWordRanges.Add(new IndexRangeData(rangeStart.Value, rangeEnd));
+                }
+
+                rangeStart = null;
+            }
+            else if (rangeStart == null)
+            {
+                rangeStart = i;
+                if (i == words.Length - 1)
+                {
+                    rightWordRanges.Add(new IndexRangeData(rangeStart.Value, rangeStart.Value));
+                }
+            }
+        }
+
+        var result = new int[queries.Length];
+
+        for (var i = 0; i < queries.Length; i++)
+        {
+            var query = queries[i];
+            var startIndex = query[0];
+            var endIndex = query[1];
+            foreach (var rigthWordRange in rightWordRanges)
+            {
+                if (endIndex < rigthWordRange.Start)
+                {
+                    break;
+                }
+
+                if (startIndex > rigthWordRange.End)
+                {
+                    continue;
+                }
+
+                result[i] += Math.Min(rigthWordRange.End, endIndex) - Math.Max(startIndex, rigthWordRange.Start) + 1;
+            }
+
+        }
+
+        return result;
+    }
 }
