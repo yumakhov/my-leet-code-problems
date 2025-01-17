@@ -78,24 +78,30 @@ public class CountVowelStringsInRanges2559
             var isRightWord = VowelLetters.Contains(word[0]) &&
                 VowelLetters.Contains(word[word.Length - 1]);
 
-            if (!isRightWord || i == words.Length - 1)
+            var isArrayEnd = i == words.Length - 1;
+            if (isRightWord)
             {
-                if (rangeStart != null)
+                if (rangeStart == null)
                 {
-                    var rangeEnd = i == words.Length - 1 ? i : i - 1;
+                    rangeStart = i;
+                }
+
+                if (isArrayEnd)
+                {
+                    var rangeEnd = i;
                     rightWordRanges.Add(new IndexRangeData(rangeStart.Value, rangeEnd));
                 }
 
-                rangeStart = null;
+                continue;
             }
-            else if (rangeStart == null)
+
+            if (rangeStart != null)
             {
-                rangeStart = i;
-                if (i == words.Length - 1)
-                {
-                    rightWordRanges.Add(new IndexRangeData(rangeStart.Value, rangeStart.Value));
-                }
+                var rangeEnd = i - 1;
+                rightWordRanges.Add(new IndexRangeData(rangeStart.Value, rangeEnd));
             }
+
+            rangeStart = null;
         }
 
         var result = new int[queries.Length];
@@ -119,7 +125,6 @@ public class CountVowelStringsInRanges2559
 
                 result[i] += Math.Min(rigthWordRange.End, endIndex) - Math.Max(startIndex, rigthWordRange.Start) + 1;
             }
-
         }
 
         return result;
